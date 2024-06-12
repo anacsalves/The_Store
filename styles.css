@@ -70,3 +70,8 @@ th {
 .actions .delete {
     color: #F44336;
 }
+
+#logo{
+    height: 120px;
+    width: auto;
+}
