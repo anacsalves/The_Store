@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="imagex/png" href="The Store Aba.png">
+    <title>Gerenciamento de Produtos - The Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="usuarios.html">Usuários</a></li>
+        </ul>
+    </nav>
+    <h1>Gerenciamento de Produtos</h1>
+    
+    <form id="productForm">
+        <h2>Cadastrar Produto</h2>
+        <label for="code">Código:</label>
+        <input type="number" id="code" name="code" required><br>
+        <label for="description">Descrição:</label>
+        <input type="text" id="description" name="description" required><br>
+        <label for="purchasePrice">Preço de Compra:</label>
+        <input type="number" id="purchasePrice" name="purchasePrice" step="0.01" required><br>
+        <label for="salePrice">Preço de Venda:</label>
+        <input type="number" id="salePrice" name="salePrice" step="0.01" required><br>
+        <label for="quantity">Quantidade:</label>
+        <input type="number" id="quantity" name="quantity" required><br>
+        <button type="submit">Salvar</button>
+    </form>
+
+    <h2>Produtos Cadastrados</h2>
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Descrição</th>
+                <th>Preço de Compra</th>
+                <th>Preço de Venda</th>
+                <th>Quantidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Linhas de produtos serão adicionadas aqui -->
+        </tbody>
+    </table>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
