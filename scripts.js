@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gerenciamento de Usuários
     const userForm = document.getElementById('userForm');
     const userTable = document.getElementById('userTable').querySelector('tbody');
+    const userSearch = document.getElementById('userSearch');
 
     let users = [];
     let editUserIndex = null;
@@ -17,9 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = { name, cpf, rg, role };
 
         if (editUserIndex !== null) {
-            users[editUserIndex].name = name;
-            users[editUserIndex].cpf = cpf;
-            users[editUserIndex].rg = rg;
+            users[editUserIndex] = user;
             editUserIndex = null;
         } else {
             users.push(user);
@@ -29,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         userForm.role.disabled = false;
         renderUsers();
     });
+
+    userSearch.addEventListener('keyup', searchUser);
 
     function renderUsers() {
         userTable.innerHTML = '';
@@ -65,9 +66,29 @@ document.addEventListener('DOMContentLoaded', () => {
         renderUsers();
     };
 
+    function searchUser() {
+        const searchTerm = userSearch.value.toLowerCase();
+        userTable.innerHTML = '';
+        users.filter(user => user.name.toLowerCase().includes(searchTerm)).forEach((user, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.name}</td>
+                <td>${user.cpf}</td>
+                <td>${user.rg}</td>
+                <td>${user.role}</td>
+                <td class="actions">
+                    <button class="edit" onclick="editUser(${index})">✏️</button>
+                    <button class="delete" onclick="deleteUser(${index})">🗑️</button>
+                </td>
+            `;
+            userTable.appendChild(row);
+        });
+    }
+
     // Gerenciamento de Produtos
     const productForm = document.getElementById('productForm');
     const productTable = document.getElementById('productTable').querySelector('tbody');
+    const productSearch = document.getElementById('productSearch');
 
     let products = [];
     let editProductIndex = null;
@@ -101,6 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
         productForm.quantity.disabled = false;
         renderProducts();
     });
+
+    productSearch.addEventListener('keyup', searchProduct);
 
     function renderProducts() {
         productTable.innerHTML = '';
@@ -141,4 +164,118 @@ document.addEventListener('DOMContentLoaded', () => {
         products.splice(index, 1);
         renderProducts();
     };
+
+    function searchProduct() {
+        const searchTerm = productSearch.value.toLowerCase();
+        productTable.innerHTML = '';
+        products.filter(product => product.code.toLowerCase().includes(searchTerm)).forEach((product, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${product.code}</td>
+                <td>${product.description}</td>
+                <td>${product.purchasePrice.toFixed(2)}</td>
+                <td>${product.salePrice.toFixed(2)}</td>
+                <td>${product.quantity}</td>
+                <td class="actions">
+                    <button class="edit" onclick="editProduct(${index})">✏️</button>
+                    <button class="delete" onclick="deleteProduct(${index})">🗑️</button>
+                </td>
+            `;
+            productTable.appendChild(row);
+        });
+    }
+
+    // Gerenciamento de Clientes
+    const clientForm = document.getElementById('clientForm');
+    const clientTable = document.getElementById('clientTable').querySelector('tbody');
+    const clientSearch = document.getElementById('clientSearch');
+
+    let clients = [];
+    let editClientIndex = null;
+
+    clientForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const clientName = clientForm.clientName.value;
+        const clientCPF = clientForm.clientCPF.value;
+        const clientAddress = clientForm.clientAddress.value;
+        const clientEmail = clientForm.clientEmail.value;
+
+        const client = { clientName, clientCPF, clientAddress, clientEmail };
+
+        if (editClientIndex !== null) {
+            clients[editClientIndex].clientAddress = clientAddress;
+            clients[editClientIndex].clientEmail = clientEmail;
+            editClientIndex = null;
+        } else {
+            clients.push(client);
+        }
+
+        clientForm.reset();
+        renderClients();
+    });
+
+    clientSearch.addEventListener('keyup', searchClient);
+
+    function renderClients() {
+        clientTable.innerHTML = '';
+        clients.forEach((client, index) => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${client.clientName}</td>
+                <td>${client.clientCPF}</td>
+                <td>${client.clientAddress}</td>
+                <td>${client.clientEmail}</td>
+                <td class="actions">
+                    <button class="edit" onclick="editClient(${index})">✏️</button>
+                    <button class="delete" onclick="deleteClient(${index})">🗑️</button>
+                </td>
+            `;
+
+            clientTable.appendChild(row);
+        });
+    }
+
+    window.editClient = function(index) {
+        const client = clients[index];
+        clientForm.clientName.value = client.clientName;
+        clientForm.clientCPF.value = client.clientCPF;
+        clientForm.clientAddress.value = client.clientAddress;
+        clientForm.clientEmail.value = client.clientEmail;
+        editClientIndex = index;
+
+        // Habilitar apenas os campos de endereço e email para edição
+        clientForm.clientName.disabled = true;
+        clientForm.clientCPF.disabled = true;
+    };
+
+    window.deleteClient = function(index) {
+        clients.splice(index, 1);
+        renderClients();
+    };
+
+    function searchClient() {
+        const searchTerm = clientSearch.value.toLowerCase();
+        clientTable.innerHTML = '';
+        clients.filter(client => client.clientCPF.toLowerCase().includes(searchTerm)).forEach((client, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${client.clientName}</td>
+                <td>${client.clientCPF}</td>
+                <td>${client.clientAddress}</td>
+                <td>${client.clientEmail}</td>
+                <td class="actions">
+                    <button class="edit" onclick="editClient(${index})">✏️</button>
+                    <button class="delete" onclick="deleteClient(${index})">🗑️</button>
+                </td>
+            `;
+            clientTable.appendChild(row);
+        });
+    }
+
+    // Inicialização da página com dados existentes (caso existam)
+    renderUsers();
+    renderProducts();
+    renderClients();
 });

@@ -1,5 +1,3 @@
-/* styles.css */
-
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
@@ -71,35 +69,129 @@ th {
     color: #F44336;
 }
 
-#logo{
-    height: 120px;
-    width: auto;
-}
-
-nav {
-    background-color: #333;
-    overflow: hidden;
-}
-
-nav ul {
-    list-style-type: none;
+/* Estilos gerais para o corpo da página */
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
     margin: 0;
     padding: 0;
     display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-nav ul li {
-    float: left;
-}
-
-nav ul li a {
-    display: block;
-    color: white;
+/* Estilos para o cabeçalho (título principal) */
+header {
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
     text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+    margin-top: 0;
+    max-height: 200px;
 }
 
-nav ul li a:hover {
-    background-color: #111;
+/* Estilos para o menu de navegação */
+.menu {
+    background-color: #444;
+    overflow: hidden;
+    width: 100%;
+}
+
+.menu a {
+    float: left;
+    display: block;
+    color: #fff;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.menu a:hover {
+    background-color: #555;
+}
+
+/* Estilos para as seções de conteúdo (Usuário, Produto, Cliente) */
+.section {
+    background-color: #fff;
+    width: 80%;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: none; /* Inicialmente oculto */
+}
+
+.section.active {
+    display: block; /* Mostra a seção ativa */
+}
+
+/* Estilos para os formulários */
+form {
+    margin-bottom: 20px;
+}
+
+form h2 {
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select, button {
+    padding: 8px;
+    margin-bottom: 10px;
+    width: calc(100% - 16px);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para as tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Responsividade */
+@media screen and (max-width: 600px) {
+    .menu a {
+        float: none;
+        width: 100%;
+        text-align: center;
+    }
+
+    .section {
+        width: 100%;
+    }
+
+    input, select, button {
+        width: 100%;
+    }
 }
