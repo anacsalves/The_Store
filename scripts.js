@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Gerenciamento de Usuários
     const userForm = document.getElementById('userForm');
     const userTable = document.getElementById('userTable').querySelector('tbody');
-    const userSearch = document.getElementById('userSearch');
 
     let users = [];
     let editUserIndex = null;
@@ -28,8 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
         userForm.role.disabled = false;
         renderUsers();
     });
-
-    userSearch.addEventListener('keyup', searchUser);
 
     function renderUsers() {
         userTable.innerHTML = '';
@@ -66,30 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderUsers();
     };
 
-    function searchUser() {
-        const searchTerm = userSearch.value.toLowerCase();
-        userTable.innerHTML = '';
-        users.filter(user => user.name.toLowerCase().includes(searchTerm)).forEach((user, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${user.name}</td>
-                <td>${user.cpf}</td>
-                <td>${user.rg}</td>
-                <td>${user.role}</td>
-                <td class="actions">
-                    <button class="edit" onclick="editUser(${index})">✏️</button>
-                    <button class="delete" onclick="deleteUser(${index})">🗑️</button>
-                </td>
-            `;
-            userTable.appendChild(row);
-        });
-    }
-
-    // Gerenciamento de Produtos
     const productForm = document.getElementById('productForm');
     const productTable = document.getElementById('productTable').querySelector('tbody');
-    const productSearch = document.getElementById('productSearch');
-
     let products = [];
     let editProductIndex = null;
 
@@ -105,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (editProductIndex !== null) {
             products[editProductIndex].purchasePrice = purchasePrice;
             products[editProductIndex].salePrice = salePrice;
+            products[editProductIndex].quantity = quantity; // Corrigido para permitir edição da quantidade
             editProductIndex = null;
         } else {
             const existingProductIndex = products.findIndex(product => product.code === code);
@@ -122,8 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
         productForm.quantity.disabled = false;
         renderProducts();
     });
-
-    productSearch.addEventListener('keyup', searchProduct);
 
     function renderProducts() {
         productTable.innerHTML = '';
@@ -164,31 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
         products.splice(index, 1);
         renderProducts();
     };
-
-    function searchProduct() {
-        const searchTerm = productSearch.value.toLowerCase();
-        productTable.innerHTML = '';
-        products.filter(product => product.code.toLowerCase().includes(searchTerm)).forEach((product, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${product.code}</td>
-                <td>${product.description}</td>
-                <td>${product.purchasePrice.toFixed(2)}</td>
-                <td>${product.salePrice.toFixed(2)}</td>
-                <td>${product.quantity}</td>
-                <td class="actions">
-                    <button class="edit" onclick="editProduct(${index})">✏️</button>
-                    <button class="delete" onclick="deleteProduct(${index})">🗑️</button>
-                </td>
-            `;
-            productTable.appendChild(row);
-        });
-    }
-
     // Gerenciamento de Clientes
     const clientForm = document.getElementById('clientForm');
     const clientTable = document.getElementById('clientTable').querySelector('tbody');
-    const clientSearch = document.getElementById('clientSearch');
 
     let clients = [];
     let editClientIndex = null;
@@ -214,8 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
         clientForm.reset();
         renderClients();
     });
-
-    clientSearch.addEventListener('keyup', searchClient);
 
     function renderClients() {
         clientTable.innerHTML = '';
@@ -254,23 +204,61 @@ document.addEventListener('DOMContentLoaded', () => {
         clients.splice(index, 1);
         renderClients();
     };
+     // Emissão de Nota Fiscal
+     const invoiceForm = document.getElementById('invoiceForm');
+     const invoiceTable = document.getElementById('invoiceTable').querySelector('tbody');
+     let invoices = [];
 
-    function searchClient() {
-        const searchTerm = clientSearch.value.toLowerCase();
-        clientTable.innerHTML = '';
-        clients.filter(client => client.clientCPF.toLowerCase().includes(searchTerm)).forEach((client, index) => {
+     invoiceForm.addEventListener('submit', (event) => {
+         event.preventDefault();
+
+         const invoiceCPF = invoiceForm.invoiceCPF.value;
+         const invoiceCode = (invoiceForm.invoiceCode.value);
+         const invoiceQuantity = (invoiceForm.invoiceQuantity.value);
+         const invoiceDate = invoiceForm.invoiceDate.value;
+
+         const product = products.find(p => p.code === invoiceCode);
+         if (!product || product.quantity < invoiceQuantity) {
+             alert('Produto inexistente ou quantidade insuficiente!');
+             return;
+         }
+
+         const totalValue = invoiceQuantity * product.salePrice;
+
+         const invoice = { invoiceCPF, invoiceCode, invoiceQuantity, invoiceDate, totalValue };
+         invoices.push(invoice);
+         renderInvoices();
+         product.quantity -= invoiceQuantity; // Atualiza o estoque
+         renderProducts(); // Atualiza a lista de produtos
+     });
+
+     function renderInvoices() {
+         invoiceTable.innerHTML = '';
+         invoices.forEach(invoice => {
+             const row = document.createElement('tr');
+             row.innerHTML = `
+                 <td>${invoice.invoiceCPF}</td>
+                 <td>${invoice.invoiceCode}</td>
+                 <td>${invoice.invoiceQuantity}</td>
+                 <td>${invoice.invoiceDate}</td>
+                 <td>${invoice.totalValue.toFixed(2)}</td>
+             `;
+             invoiceTable.appendChild(row);
+         });
+     }
+
+    function renderInvoices() {
+        invoiceTable.innerHTML = '';
+        invoices.forEach(invoice => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${client.clientName}</td>
-                <td>${client.clientCPF}</td>
-                <td>${client.clientAddress}</td>
-                <td>${client.clientEmail}</td>
-                <td class="actions">
-                    <button class="edit" onclick="editClient(${index})">✏️</button>
-                    <button class="delete" onclick="deleteClient(${index})">🗑️</button>
-                </td>
+                <td>${invoice.invoiceCPF}</td>
+                <td>${invoice.invoiceCode}</td>
+                <td>${invoice.invoiceQuantity}</td>
+                <td>${invoice.invoiceDate}</td>
+                <td>${invoice.totalValue.toFixed(2)}</td>
             `;
-            clientTable.appendChild(row);
+            invoiceTable.appendChild(row);
         });
     }
 
@@ -278,4 +266,5 @@ document.addEventListener('DOMContentLoaded', () => {
     renderUsers();
     renderProducts();
     renderClients();
+    renderInvoices();
 });
