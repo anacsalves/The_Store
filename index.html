@@ -19,6 +19,7 @@
     <a href="#" onclick="showSection('products')">Produto</a>
     <a href="#" onclick="showSection('clients')">Cliente</a>
     <a href="#" onclick="showSection('invoices')">Nota Fiscal</a>
+    <a href="#" onclick="showSection('reports')">Relatórios</a>
 </div>
 
 <div id="users" class="section">
@@ -158,6 +159,25 @@
             <!-- Linhas de notas fiscais serão adicionadas aqui -->
         </tbody>
     </table>
+</div>
+
+<div id="reports" class="section">
+    <h2>Relatórios</h2>
+
+    <form id="reportForm">
+        <h3>Gerar Relatório</h3>
+        <label for="reportStartDate">Data Inicial:</label>
+        <input type="date" id="reportStartDate" name="reportStartDate" required><br>
+        <label for="reportEndDate">Data Final:</label>
+        <input type="date" id="reportEndDate" name="reportEndDate" required><br>
+        <button type="submit">Gerar Relatório</button>
+    </form>
+
+    <h3>Relatório de Faturamento por Período</h3>
+    <p id="faturamentoReport">Nenhum relatório gerado.</p>
+
+    <h3>Relatório de Lucro por Período</h3>
+    <p id="lucroReport">Nenhum relatório gerado.</p>
 </div>
 
 

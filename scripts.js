@@ -262,6 +262,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Relatórios
+    const reportForm = document.getElementById('reportForm');
+    const faturamentoReport = document.getElementById('faturamentoReport');
+    const lucroReport = document.getElementById('lucroReport');
+
+    reportForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const startDate = new Date(reportForm.reportStartDate.value);
+        const endDate = new Date(reportForm.reportEndDate.value);
+
+        if (startDate > endDate) {
+            alert('A data inicial não pode ser maior que a data final!');
+            return;
+        }
+
+        generateReports(startDate, endDate);
+    });
+
+    function generateReports(startDate, endDate) {
+        let totalFaturamento = 0;
+        let totalLucro = 0;
+
+        invoices.forEach(invoice => {
+            const invoiceDate = new Date(invoice.invoiceDate);
+            if (invoiceDate >= startDate && invoiceDate <= endDate) {
+                totalFaturamento += invoice.totalValue;
+                const product = products.find(p => p.code === invoice.invoiceCode);
+                if (product) {
+                    const lucro = (invoice.invoiceQuantity * (product.salePrice - product.purchasePrice));
+                    totalLucro += lucro;
+                }
+            }
+        });
+
+        faturamentoReport.innerHTML = `Total de Faturamento: R$ ${totalFaturamento.toFixed(2)}`;
+        lucroReport.innerHTML = `Total de Lucro: R$ ${totalLucro.toFixed(2)}`;
+    }
+
     // Inicialização da página com dados existentes (caso existam)
     renderUsers();
     renderProducts();
